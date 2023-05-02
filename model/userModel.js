@@ -9,14 +9,17 @@ const nanoId = nanoid()
 
 const createUser = async (credentials) =>{
     const pass = await hashPassword(credentials.password);
-
-    usersDatabase.insert
-    ({
-        nanoId: nanoId,
-        username: credentials.username,
-        password: pass
-    })
+const userToCreate = {
+    nanoId: nanoId,
+    username: credentials.username,
+    password: pass
 }
+    usersDatabase.insert(userToCreate)
+    return userToCreate;
+
+}
+
+
 
 const userExists = async (username) => {
     return await usersDatabase.findOne({ username: username });

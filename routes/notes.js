@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import { verify } from '../middleware/userValidation.js';
 import { createNote, findByID, updateNote, deleteNote } from '../model/notesModel.js';
-
+import { checkNote } from '../middleware/noteValidation.js';
 
 const router = Router()
 
 
-router.post('/', verify, (req, res) => {
+router.post('/notes', verify, checkNote, (req, res) => {
     const note = req.body;
     note.userId = req.id
     createNote(note)
@@ -14,7 +14,7 @@ router.post('/', verify, (req, res) => {
     res.json({ success: true })
 })
 
-router.put('/', verify, async (req, res) => {
+router.put('/notes', verify, checkNote, async (req, res) => {
     const note = req.body;
     note.userId = req.id
 
@@ -23,13 +23,13 @@ router.put('/', verify, async (req, res) => {
     res.json({ success: true, note: updatedNote })
 })
 
-router.delete('/', verify, async (req,res) => {
+router.delete('/notes', verify, async (req,res) => {
     const nanoId = req.body.nanoId
     const deleted = await deleteNote(nanoId)
     res.json({success: deleted})
 })
 
-router.get('/', verify, async (req, res) => {
+router.get('/notes', verify, async (req, res) => {
     const notes = await findByID(req.id)
     res.json({ success: true, notes: notes })
 })
